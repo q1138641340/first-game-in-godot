@@ -15,8 +15,11 @@ func _run():
 	root.add_child(intro)
 	current_scene = intro
 	await process_frame
-	_check(intro.get_node("VideoStreamPlayer").is_playing(), "intro video did not start")
+	_check(not intro.get_node("VideoStreamPlayer").is_playing(), "intro video started before user interaction")
 	_check(intro.get_node("VideoStreamPlayer").get_stream_length() > 49.0, "intro video has an invalid duration")
+	intro._on_start_button_pressed()
+	await process_frame
+	_check(intro.get_node("VideoStreamPlayer").is_playing(), "intro video did not start after user interaction")
 	var skip_event = InputEventAction.new()
 	skip_event.action = "jump"
 	skip_event.pressed = true

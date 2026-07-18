@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://scripts/intro.gd" id="1_intro"]
 [ext_resource type="Texture2D" path="res://assets/sprites/background.png" id="2_background"]
 [ext_resource type="VideoStreamTheora" path="res://assets/video/intro.ogv" id="3_video"]
+[ext_resource type="FontFile" path="res://assets/fonts/PixelOperator8-Bold.ttf" id="4_font"]
 
 [node name="Intro" type="Control"]
 layout_mode = 3
@@ -29,4 +30,39 @@ anchor_bottom = 1.0
 stream = ExtResource("3_video")
 expand = true
 
+[node name="StartOverlay" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Dim" type="ColorRect" parent="StartOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+color = Color(0, 0, 0, 0.42)
+
+[node name="StartButton" type="Button" parent="StartOverlay"]
+custom_minimum_size = Vector2(280, 72)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -140.0
+offset_top = -36.0
+offset_right = 140.0
+offset_bottom = 36.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 0.86, 0.35, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 24
+theme_override_fonts/font = ExtResource("4_font")
+text = "START GAME"
+
 [connection signal="finished" from="VideoStreamPlayer" to="." method="_on_video_stream_player_finished"]
+[connection signal="pressed" from="StartOverlay/StartButton" to="." method="_on_start_button_pressed"]
