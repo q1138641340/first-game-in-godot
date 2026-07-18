@@ -1,10 +1,11 @@
-[gd_scene load_steps=20 format=3 uid="uid://c3dgamescene01"]
+[gd_scene load_steps=23 format=3 uid="uid://c3dgamescene01"]
 
 [ext_resource type="Script" path="res://scripts/game_manager_3d.gd" id="1_gm"]
 [ext_resource type="Script" path="res://scripts/player_3d.gd" id="2_player"]
 [ext_resource type="Script" path="res://scripts/coin_3d.gd" id="3_coin"]
 [ext_resource type="Script" path="res://scripts/slime_3d.gd" id="4_slime"]
 [ext_resource type="Script" path="res://scripts/killzone_3d.gd" id="5_kz"]
+[ext_resource type="Script" path="res://scripts/level_exit_3d.gd" id="6_exit"]
 
 [sub_resource type="StandardMaterial3D" id="mat_grass"]
 albedo_color = Color(0.08, 0.3, 0.08, 1)
@@ -38,6 +39,11 @@ emission = Color(0.15, 0.55, 0.35, 1)
 emission_energy_multiplier = 2.0
 roughness = 0.25
 metallic = 0.5
+
+[sub_resource type="StandardMaterial3D" id="mat_exit"]
+albedo_color = Color(0.95, 0.3, 0.75, 1)
+emission = Color(1, 0.15, 0.7, 1)
+emission_energy_multiplier = 4.0
 
 [sub_resource type="BoxMesh" id="mesh_ground"]
 size = Vector3(100, 1, 10)
@@ -78,11 +84,42 @@ height = 0.6
 [sub_resource type="BoxShape3D" id="shape_killzone"]
 size = Vector3(200, 1, 20)
 
+[sub_resource type="BoxShape3D" id="shape_exit"]
+size = Vector3(2, 4, 2)
+
 [node name="Game3D" type="Node3D"]
 
 [node name="GameManager" type="Node3D" parent="."]
 script = ExtResource("1_gm")
 unique_name_in_owner = true
+
+[node name="UILayer" type="CanvasLayer" parent="GameManager"]
+
+[node name="ScoreLabel" type="Label" parent="GameManager/UILayer"]
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 260.0
+offset_bottom = 52.0
+theme_override_colors/font_color = Color(0.2, 0.95, 0.8, 1)
+theme_override_font_sizes/font_size = 22
+text = "3D Ribbons: 0/0"
+
+[node name="CompleteLabel" type="Label" parent="GameManager/UILayer"]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -240.0
+offset_top = -60.0
+offset_right = 240.0
+offset_bottom = 60.0
+theme_override_colors/font_color = Color(1, 0.45, 0.8, 1)
+theme_override_font_sizes/font_size = 28
+text = "3D Branch Complete!"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 position = Vector3(5, 12, 5)
@@ -283,3 +320,22 @@ position = Vector3(0, -5, 0)
 script = ExtResource("5_kz")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Killzone"]
 shape = SubResource("shape_killzone")
+
+[node name="LevelExit" type="Area3D" parent="."]
+position = Vector3(28, 2, 0)
+script = ExtResource("6_exit")
+
+[node name="Portal" type="MeshInstance3D" parent="LevelExit"]
+mesh = SubResource("mesh_platform")
+surface_material_override/0 = SubResource("mat_exit")
+scale = Vector3(0.5, 12, 1)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="LevelExit"]
+shape = SubResource("shape_exit")
+
+[node name="Label3D" type="Label3D" parent="LevelExit"]
+position = Vector3(0, 3, 0)
+text = "EXIT"
+font_size = 64
+outline_size = 12
+modulate = Color(1, 0.4, 0.8, 1)

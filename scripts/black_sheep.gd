@@ -9,6 +9,7 @@ var player = null
 var _patrol_dir = 1
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 var _jump_cooldown = 0.0
+var _is_dead = false
 
 @onready var sprite = $AnimatedSprite2D
 
@@ -17,6 +18,8 @@ func _ready():
 	player = get_tree().get_first_node_in_group("player")
 
 func _physics_process(delta):
+	if _is_dead:
+		return
 	if not player:
 		var players = get_tree().get_nodes_in_group("player")
 		if players.size() > 0:
@@ -60,9 +63,9 @@ func _physics_process(delta):
 		sprite.play("run")
 	else:
 		# Patrol mode
-		if (player_dir > 0 and not _is_ground_ahead(1)) or (player_dir < 0 and not _is_ground_ahead(-1)):
-			_patrol_dir = player_dir  # already facing player, just keep going
-		velocity.x = player_dir * SPEED * 0.3
+		if not _is_ground_ahead(_patrol_dir):
+			_patrol_dir *= -1
+		velocity.x = _patrol_dir * SPEED * 0.3
 		sprite.play("idle")
 
 	# Update sprite direction
@@ -77,6 +80,8 @@ func _physics_process(delta):
 	for i in range(get_slide_collision_count()):
 		var col = get_slide_collision(i)
 		if col.get_collider() == player:
+			if player.velocity.y > 0 and player.global_position.y < global_position.y:
+				continue
 			if player.has_method("die"):
 				player.die()
 
@@ -87,3 +92,13 @@ func _is_ground_ahead(dir):
 	query.collision_mask = 1
 	var result = space_state.intersect_ray(query)
 	return not result.is_empty()
+
+func die():
+	if _is_dead:
+		return
+	_is_dead = true
+	$CollisionShape2D.set_deferred("disabled", true)
+	var tween = create_tween()
+	tween.tween_property(sprite, "modulate:a", 0.0, 0.5)
+	tween.parallel().tween_property(sprite, "rotation", PI, 0.5)
+	tween.tween_callback(queue_free)

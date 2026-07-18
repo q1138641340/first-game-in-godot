@@ -59,6 +59,8 @@ func _physics_process(delta):
 	for i in range(get_slide_collision_count()):
 		var col = get_slide_collision(i)
 		if col.get_collider() == player:
+			if player.velocity.y > 0 and player.global_position.y < global_position.y:
+				continue
 			if player.has_method("die"):
 				player.die()
 

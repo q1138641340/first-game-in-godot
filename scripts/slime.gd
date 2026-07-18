@@ -17,6 +17,7 @@ func die():
 	particles.burst_green()
 	animated_sprite.visible = false
 	$StompHitbox/CollisionShape2D.set_deferred("disabled", true)
+	$Killzone/CollisionShape2D.set_deferred("disabled", true)
 	await get_tree().create_timer(0.3).timeout
 	queue_free()
 
