@@ -45,17 +45,17 @@ jobs:
           set -euo pipefail
           if [[ ! -x "$GODOT_DIR/godot" ]]; then
             curl --fail --location --retry 3 \
-              "https://github.com/godotengine/godot-builds/releases/download/$GODOT_RELEASE/Godot_v$GODOT_RELEASE_linux.x86_64.zip" \
+              "https://github.com/godotengine/godot-builds/releases/download/$GODOT_RELEASE/Godot_v${GODOT_RELEASE}_linux.x86_64.zip" \
               --output /tmp/godot.zip
             echo "c7ff14fd28472c8d4f193043de30278dcf7e5241a1dcf7566b02e27addaa33ba  /tmp/godot.zip" | sha256sum --check
             mkdir -p "$GODOT_DIR"
             unzip -q /tmp/godot.zip -d "$GODOT_DIR"
-            mv "$GODOT_DIR/Godot_v$GODOT_RELEASE_linux.x86_64" "$GODOT_DIR/godot"
+            mv "$GODOT_DIR/Godot_v${GODOT_RELEASE}_linux.x86_64" "$GODOT_DIR/godot"
             chmod +x "$GODOT_DIR/godot"
           fi
           if [[ ! -f "$TEMPLATE_DIR/web_nothreads_release.zip" ]]; then
             curl --fail --location --retry 3 \
-              "https://github.com/godotengine/godot-builds/releases/download/$GODOT_RELEASE/Godot_v$GODOT_RELEASE_export_templates.tpz" \
+              "https://github.com/godotengine/godot-builds/releases/download/$GODOT_RELEASE/Godot_v${GODOT_RELEASE}_export_templates.tpz" \
               --output /tmp/templates.tpz
             echo "86409db6200b6f8fd3230989c2d2002851f3dd18acf11d7bdbafddf5a0dd0f72  /tmp/templates.tpz" | sha256sum --check
             mkdir -p "$TEMPLATE_DIR"
