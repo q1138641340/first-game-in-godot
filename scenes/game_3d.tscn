@@ -1,0 +1,285 @@
+[gd_scene load_steps=20 format=3 uid="uid://c3dgamescene01"]
+
+[ext_resource type="Script" path="res://scripts/game_manager_3d.gd" id="1_gm"]
+[ext_resource type="Script" path="res://scripts/player_3d.gd" id="2_player"]
+[ext_resource type="Script" path="res://scripts/coin_3d.gd" id="3_coin"]
+[ext_resource type="Script" path="res://scripts/slime_3d.gd" id="4_slime"]
+[ext_resource type="Script" path="res://scripts/killzone_3d.gd" id="5_kz"]
+
+[sub_resource type="StandardMaterial3D" id="mat_grass"]
+albedo_color = Color(0.08, 0.3, 0.08, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="mat_platform"]
+albedo_color = Color(0.12, 0.12, 0.22, 1)
+emission = Color(0.3, 0.85, 1.0, 1)
+emission_energy_multiplier = 1.5
+roughness = 0.3
+metallic = 0.6
+
+[sub_resource type="StandardMaterial3D" id="mat_sheep"]
+albedo_color = Color(0.65, 0.92, 0.7, 1)
+roughness = 0.4
+metallic = 0.15
+
+[sub_resource type="StandardMaterial3D" id="mat_dark"]
+albedo_color = Color(0.18, 0.13, 0.13, 1)
+roughness = 0.6
+
+[sub_resource type="StandardMaterial3D" id="mat_neon"]
+albedo_color = Color(0.2, 0.9, 0.7, 1)
+emission = Color(0.3, 0.95, 0.8, 1)
+emission_energy_multiplier = 3.0
+roughness = 0.15
+
+[sub_resource type="StandardMaterial3D" id="mat_slime"]
+albedo_color = Color(0.35, 0.85, 0.65, 1)
+emission = Color(0.15, 0.55, 0.35, 1)
+emission_energy_multiplier = 2.0
+roughness = 0.25
+metallic = 0.5
+
+[sub_resource type="BoxMesh" id="mesh_ground"]
+size = Vector3(100, 1, 10)
+
+[sub_resource type="BoxShape3D" id="shape_ground"]
+size = Vector3(100, 1, 10)
+
+[sub_resource type="BoxMesh" id="mesh_platform"]
+size = Vector3(3, 0.3, 2)
+
+[sub_resource type="BoxShape3D" id="shape_platform"]
+size = Vector3(3, 0.3, 2)
+
+[sub_resource type="SphereMesh" id="mesh_sphere"]
+radius = 0.5
+height = 1.0
+radial_segments = 16
+rings = 12
+
+[sub_resource type="CapsuleMesh" id="mesh_leg"]
+radius = 0.08
+height = 0.4
+
+[sub_resource type="CapsuleShape3D" id="shape_player"]
+radius = 0.35
+height = 1.0
+
+[sub_resource type="BoxShape3D" id="shape_stomp"]
+size = Vector3(0.7, 0.15, 0.7)
+
+[sub_resource type="SphereShape3D" id="shape_coin"]
+radius = 0.4
+
+[sub_resource type="CapsuleShape3D" id="shape_slime"]
+radius = 0.45
+height = 0.6
+
+[sub_resource type="BoxShape3D" id="shape_killzone"]
+size = Vector3(200, 1, 20)
+
+[node name="Game3D" type="Node3D"]
+
+[node name="GameManager" type="Node3D" parent="."]
+script = ExtResource("1_gm")
+unique_name_in_owner = true
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+position = Vector3(5, 12, 5)
+rotation = Vector3(-0.5, 0.4, 0)
+
+[node name="Ground" type="StaticBody3D" parent="."]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Ground"]
+mesh = SubResource("mesh_ground")
+surface_material_override/0 = SubResource("mat_grass")
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground"]
+shape = SubResource("shape_ground")
+
+[node name="PlatformGroup" type="Node3D" parent="."]
+
+[node name="Platform1" type="StaticBody3D" parent="PlatformGroup"]
+position = Vector3(6, 3, 0)
+[node name="MeshInstance3D" type="MeshInstance3D" parent="PlatformGroup/Platform1"]
+mesh = SubResource("mesh_platform")
+surface_material_override/0 = SubResource("mat_platform")
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PlatformGroup/Platform1"]
+shape = SubResource("shape_platform")
+
+[node name="Platform2" type="StaticBody3D" parent="PlatformGroup"]
+position = Vector3(14, 4.5, 0)
+[node name="MeshInstance3D" type="MeshInstance3D" parent="PlatformGroup/Platform2"]
+mesh = SubResource("mesh_platform")
+surface_material_override/0 = SubResource("mat_platform")
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PlatformGroup/Platform2"]
+shape = SubResource("shape_platform")
+
+[node name="Platform3" type="StaticBody3D" parent="PlatformGroup"]
+position = Vector3(22, 2.5, 0)
+[node name="MeshInstance3D" type="MeshInstance3D" parent="PlatformGroup/Platform3"]
+mesh = SubResource("mesh_platform")
+surface_material_override/0 = SubResource("mat_platform")
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PlatformGroup/Platform3"]
+shape = SubResource("shape_platform")
+
+[node name="Player" type="CharacterBody3D" parent="."]
+position = Vector3(2, 3, 0)
+script = ExtResource("2_player")
+
+[node name="SheepBody" type="Node3D" parent="Player"]
+[node name="BodyMesh" type="MeshInstance3D" parent="Player/SheepBody"]
+position = Vector3(0, 0.5, 0)
+mesh = SubResource("mesh_sphere")
+surface_material_override/0 = SubResource("mat_sheep")
+scale = Vector3(0.9, 0.7, 0.7)
+
+[node name="HeadMesh" type="MeshInstance3D" parent="Player/SheepBody"]
+position = Vector3(0, 0.95, 0.35)
+mesh = SubResource("mesh_sphere")
+surface_material_override/0 = SubResource("mat_dark")
+scale = Vector3(0.4, 0.4, 0.4)
+
+[node name="EarL" type="MeshInstance3D" parent="Player/SheepBody"]
+position = Vector3(0.18, 1.15, 0.28)
+mesh = SubResource("mesh_leg")
+surface_material_override/0 = SubResource("mat_dark")
+rotation = Vector3(0, 0, 0.4)
+scale = Vector3(1, 0.5, 0.3)
+
+[node name="EarR" type="MeshInstance3D" parent="Player/SheepBody"]
+position = Vector3(-0.18, 1.15, 0.28)
+mesh = SubResource("mesh_leg")
+surface_material_override/0 = SubResource("mat_dark")
+rotation = Vector3(0, 0, -0.4)
+scale = Vector3(1, 0.5, 0.3)
+
+[node name="LegFL" type="MeshInstance3D" parent="Player/SheepBody"]
+position = Vector3(0.2, 0.08, 0.2)
+mesh = SubResource("mesh_leg")
+surface_material_override/0 = SubResource("mat_dark")
+
+[node name="LegFR" type="MeshInstance3D" parent="Player/SheepBody"]
+position = Vector3(-0.2, 0.08, 0.2)
+mesh = SubResource("mesh_leg")
+surface_material_override/0 = SubResource("mat_dark")
+
+[node name="LegBL" type="MeshInstance3D" parent="Player/SheepBody"]
+position = Vector3(0.2, 0.08, -0.2)
+mesh = SubResource("mesh_leg")
+surface_material_override/0 = SubResource("mat_dark")
+
+[node name="LegBR" type="MeshInstance3D" parent="Player/SheepBody"]
+position = Vector3(-0.2, 0.08, -0.2)
+mesh = SubResource("mesh_leg")
+surface_material_override/0 = SubResource("mat_dark")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
+shape = SubResource("shape_player")
+position = Vector3(0, 0.55, 0)
+
+[node name="Camera3D" type="Camera3D" parent="Player"]
+position = Vector3(0, 3, 10)
+
+[node name="StompArea" type="Area3D" parent="Player"]
+position = Vector3(0, -0.2, 0)
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player/StompArea"]
+shape = SubResource("shape_stomp")
+
+[node name="Coins" type="Node3D" parent="."]
+
+[node name="Coin1" type="Area3D" parent="Coins"]
+position = Vector3(4, 2.2, 0)
+script = ExtResource("3_coin")
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Coins/Coin1"]
+mesh = SubResource("mesh_sphere")
+surface_material_override/0 = SubResource("mat_neon")
+scale = Vector3(0.25, 0.25, 0.25)
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Coins/Coin1"]
+shape = SubResource("shape_coin")
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Coins/Coin1"]
+
+[node name="Coin2" type="Area3D" parent="Coins"]
+position = Vector3(5, 2.2, 0)
+script = ExtResource("3_coin")
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Coins/Coin2"]
+mesh = SubResource("mesh_sphere")
+surface_material_override/0 = SubResource("mat_neon")
+scale = Vector3(0.25, 0.25, 0.25)
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Coins/Coin2"]
+shape = SubResource("shape_coin")
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Coins/Coin2"]
+
+[node name="Coin3" type="Area3D" parent="Coins"]
+position = Vector3(6, 2.2, 0)
+script = ExtResource("3_coin")
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Coins/Coin3"]
+mesh = SubResource("mesh_sphere")
+surface_material_override/0 = SubResource("mat_neon")
+scale = Vector3(0.25, 0.25, 0.25)
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Coins/Coin3"]
+shape = SubResource("shape_coin")
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Coins/Coin3"]
+
+[node name="Coin4" type="Area3D" parent="Coins"]
+position = Vector3(8, 3.3, 0)
+script = ExtResource("3_coin")
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Coins/Coin4"]
+mesh = SubResource("mesh_sphere")
+surface_material_override/0 = SubResource("mat_neon")
+scale = Vector3(0.25, 0.25, 0.25)
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Coins/Coin4"]
+shape = SubResource("shape_coin")
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Coins/Coin4"]
+
+[node name="Coin5" type="Area3D" parent="Coins"]
+position = Vector3(9, 3.3, 0)
+script = ExtResource("3_coin")
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Coins/Coin5"]
+mesh = SubResource("mesh_sphere")
+surface_material_override/0 = SubResource("mat_neon")
+scale = Vector3(0.25, 0.25, 0.25)
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Coins/Coin5"]
+shape = SubResource("shape_coin")
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Coins/Coin5"]
+
+[node name="Coin6" type="Area3D" parent="Coins"]
+position = Vector3(16, 6, 0)
+script = ExtResource("3_coin")
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Coins/Coin6"]
+mesh = SubResource("mesh_sphere")
+surface_material_override/0 = SubResource("mat_neon")
+scale = Vector3(0.25, 0.25, 0.25)
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Coins/Coin6"]
+shape = SubResource("shape_coin")
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Coins/Coin6"]
+
+[node name="Enemies" type="Node3D" parent="."]
+
+[node name="Slime1" type="CharacterBody3D" parent="Enemies"]
+position = Vector3(8, 2, 0)
+script = ExtResource("4_slime")
+[node name="SlimeMesh" type="MeshInstance3D" parent="Enemies/Slime1"]
+mesh = SubResource("mesh_sphere")
+surface_material_override/0 = SubResource("mat_slime")
+scale = Vector3(0.55, 0.35, 0.55)
+position = Vector3(0, 0.35, 0)
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Enemies/Slime1"]
+shape = SubResource("shape_slime")
+position = Vector3(0, 0.35, 0)
+
+[node name="Slime2" type="CharacterBody3D" parent="Enemies"]
+position = Vector3(18, 5.8, 0)
+script = ExtResource("4_slime")
+[node name="SlimeMesh" type="MeshInstance3D" parent="Enemies/Slime2"]
+mesh = SubResource("mesh_sphere")
+surface_material_override/0 = SubResource("mat_slime")
+scale = Vector3(0.55, 0.35, 0.55)
+position = Vector3(0, 0.35, 0)
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Enemies/Slime2"]
+shape = SubResource("shape_slime")
+position = Vector3(0, 0.35, 0)
+
+[node name="Killzone" type="Area3D" parent="."]
+position = Vector3(0, -5, 0)
+script = ExtResource("5_kz")
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Killzone"]
+shape = SubResource("shape_killzone")
